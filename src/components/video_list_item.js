@@ -1,8 +1,8 @@
 import React from 'react';
 
-const VideoListItem = ({video}) =>{
+const VideoListItem = ({video, onVideoSelect}) =>{
     const url = video.snippet.thumbnails.default.url;    
-    return( <li>
+    return( <li onClick = {() => onVideoSelect(video)}>
                 <div>
                     <img src = {url}/>
                     {video.snippet.title}

@@ -1,3 +1,6 @@
+//loadash - enable debunace for search term
+//
+import _ from 'lodash';
 //one component - per file!
 //produces html
 //handle components
@@ -25,24 +28,28 @@ class App extends Component {
         super(props);
         this.state = { videos: [], 
                        selectedVideo: null };
-        TYSearch({key: API_KEY, term:'surfboards'}, (data)=>{
-            console.log(data);
+        this.videoSearch('surfboards');
+    }
+    videoSearch(term){
+        TYSearch({key: API_KEY, term:term}, (data)=>{
+            //console.log(data);
             this.setState({videos:data, 
                            selectedVideo:data[0]
             }); // es6 // this.setState({videos:videos})
-            
         })
     }
     //videos={this.state.videos} passdata into child components via state
     //component render function dont wait for a-sync actions it tries to render itself
     render(){
+        const videoSearch = _.debounce((term) => {this.videoSearch(term)}, 300)
+        
         return (<div>
-            <SearchBar />
+            <SearchBar onSearchTermChange = {term =>{this.videoSearch(term)}}/>
             
-            <VideoDetails video= {this.state.videos[0]}/>
+            <VideoDetails video= {this.state.selectedVideo}/>
             
             <VideoList 
-                onVideoSelect = {selectdVideo => this.setState({selectedVideo})}    
+                onVideoSelect = {selectedVideo => this.setState({selectedVideo})}    
                 videos={this.state.videos}
              /> 
         
